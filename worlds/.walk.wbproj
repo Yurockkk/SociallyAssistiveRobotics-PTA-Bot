@@ -6,7 +6,7 @@ minimizedPerspectives:
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 0 "controllers/walk/main.cpp" "controllers/walk/Walk.hpp" "controllers/walk/config.ini" "../../../../Applications/Webots.app/projects/robots/robotis/transfer/src/Keyboard.cpp"
+textFiles: 0 "controllers/walk/main.cpp" "controllers/walk/Walk.hpp" "controllers/walk/config.ini" "../../../../Applications/Webots.app/projects/robots/robotis/transfer/src/Keyboard.cpp" "controllers/walk/Walk.cpp"
 documentationBook: 
 documentationPage: 
 renderingDevicePerspectives: 61;1;0.30625;0.0273349;0.0176817
