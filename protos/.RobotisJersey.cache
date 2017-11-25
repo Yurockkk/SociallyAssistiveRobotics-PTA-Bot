@@ -1,0 +1,8 @@
+Webots Proto Cache File version 1.3
+protoFileHash: 4846d00e9381d86dcedbe05f2c2ff0ec
+containsDevices: 0
+baseType: Slot
+slotType: robotis\sjersey
+parameters: jerseyTexture,jerseyColor
+tags: 
+info: Soccer\sjersey\sspecifically\sdesigned\sfor\sthe\sRobotis\srobots.\nThe\sappearance\scan\sbe\smodified\schanging\sthe\svalue\sof\sthe\s'jerseyTexture'\sfield,\notherwise\sif\sno\stexture\sis\savailable\sthe\smodel\swill\suse\sthe\scolor\sspecified\sin\s'jerseyColor'\sfield.\nA\sdefault\sset\sof\sred\sand\sblue\stextures\swith\splayer\snumber\sfrom\s1\sto\s5\sis\sprovided.\n

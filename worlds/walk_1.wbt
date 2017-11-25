@@ -1,0 +1,114 @@
+#VRML_SIM V8.6 utf8
+WorldInfo {
+  info [
+    "ROBOTIS OP2 robot."
+    "The ROBOTIS OP2 robot simulation model can be programmed using the ROBOTIS OP2 motions files and the ROBOTIS OP2 walk control library."
+  ]
+  title "ROBOTIS OP2"
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation 0.054150501 -0.99636602 -0.065745601 4.50591
+  position 0.93640211 0.47309192 -0.63715544
+  follow "ROBOTIS OP2"
+}
+TexturedBackground {
+  texture "noon_stormy_empty"
+}
+TexturedBackgroundLight {
+  texture "noon_stormy_empty"
+}
+RobotisOp2 {
+  hidden position_0_0 2.26418e-08
+  hidden position_0_1 -1.34722e-07
+  hidden position_0_2 1.3449e-07
+  hidden position_0_3 0.721868
+  hidden position_0_4 -0.844739
+  hidden linearVelocity_0 7.35009e-10 3.98814e-10 -1.19313e-09
+  hidden angularVelocity_0 1.1457e-10 -6.02817e-08 -5.96148e-11
+  hidden position_10_0 0.173556
+  hidden linearVelocity_10 -1.68578e-09 4.63505e-10 2.736e-09
+  hidden angularVelocity_10 4.46781e-08 1.61345e-07 2.45588e-08
+  hidden rotation_11 1 0 0 0.61184449
+  hidden linearVelocity_11 -2.31562e-10 3.91632e-10 5.62625e-10
+  hidden angularVelocity_11 4.46781e-08 1.61345e-07 2.45588e-08
+  hidden rotation_15 0 -1 0 0
+  hidden position_15_0 -0.00614415
+  hidden linearVelocity_15 -1.9124e-08 3.95412e-10 3.6772e-08
+  hidden angularVelocity_15 -6.93563e-09 -6.02533e-08 -4.24049e-09
+  hidden rotation_16 0 0 1 0.0061441502
+  hidden position_16_0 0.631251
+  hidden linearVelocity_16 -3.92929e-08 4.06055e-10 7.06791e-08
+  hidden angularVelocity_16 -1.57019e-08 -5.9388e-08 -9.36968e-09
+  hidden rotation_17 -1 0 0 0.63125055
+  hidden position_17_0 -0.929214
+  hidden linearVelocity_17 -6.20684e-08 3.72469e-10 1.09189e-07
+  hidden angularVelocity_17 -2.26458e-08 -5.89923e-08 -1.35667e-08
+  hidden rotation_18 1 0 0 0.92921381
+  hidden position_18_0 -0.523738
+  hidden linearVelocity_18 -8.37118e-08 3.80699e-10 1.45629e-07
+  hidden angularVelocity_18 -2.66145e-08 -5.71069e-08 -1.59683e-08
+  hidden rotation_19 -1 0 0 0.52373842
+  hidden position_19_0 -0.0138224
+  hidden linearVelocity_19 -1.0348e-07 4.13082e-10 1.78843e-07
+  hidden angularVelocity_19 -2.77824e-08 -5.71123e-08 -1.66738e-08
+  hidden rotation_20 0 0 -1 0.013822431
+  hidden linearVelocity_20 -1.24936e-07 6.54565e-11 2.16117e-07
+  hidden angularVelocity_20 -2.92685e-08 -5.71177e-08 -1.75432e-08
+  hidden rotation_21 0 -1 0 0
+  hidden position_21_0 0.00614415
+  hidden linearVelocity_21 1.83159e-08 3.93816e-10 -3.50495e-08
+  hidden angularVelocity_21 7.16035e-09 -6.04276e-08 4.11876e-09
+  hidden rotation_22 0 0 -1 0.0061441498
+  hidden position_22_0 -0.631251
+  hidden linearVelocity_22 3.99692e-08 3.82581e-10 -7.16564e-08
+  hidden angularVelocity_22 1.59302e-08 -6.13867e-08 9.2498e-09
+  hidden rotation_23 -1 0 0 0.63125055
+  hidden position_23_0 0.929214
+  hidden linearVelocity_23 6.00311e-08 4.13026e-10 -1.05275e-07
+  hidden angularVelocity_23 2.28721e-08 -6.18744e-08 1.34508e-08
+  hidden rotation_24 1 0 0 0.92921381
+  hidden position_24_0 0.523738
+  hidden linearVelocity_24 8.22574e-08 3.98289e-10 -1.42803e-07
+  hidden angularVelocity_24 2.68424e-08 -6.38533e-08 1.58499e-08
+  hidden rotation_25 -1 0 0 0.52373842
+  hidden position_25_0 0.0138224
+  hidden linearVelocity_25 1.0458e-07 3.42474e-10 -1.80655e-07
+  hidden angularVelocity_25 2.80097e-08 -6.39432e-08 1.6556e-08
+  hidden rotation_26 0 0 1 0.013822431
+  hidden linearVelocity_26 1.24916e-07 3.28286e-11 -2.16058e-07
+  hidden angularVelocity_26 2.94965e-08 -6.40331e-08 1.74248e-08
+  hidden rotation_27 1 0 0 0.72186811
+  hidden position_27_0 0.307178
+  hidden linearVelocity_27 2.08707e-09 3.95332e-10 4.91224e-09
+  hidden angularVelocity_27 1.14504e-10 -6.02817e-08 -5.95747e-11
+  hidden rotation_28 0 0 1 0.47822203
+  hidden position_28_0 -0.516059
+  hidden linearVelocity_28 5.15302e-09 4.02847e-10 3.19252e-09
+  hidden angularVelocity_28 1.1456e-10 -6.02817e-08 -5.95661e-11
+  hidden rotation_29 -1 0 0 2.0868589
+  hidden linearVelocity_29 4.89771e-09 4.00527e-10 5.04569e-09
+  hidden angularVelocity_29 1.14569e-10 -6.02817e-08 -5.95649e-11
+  hidden rotation_30 1 0 0 0.84473928
+  hidden position_30_0 -0.311786
+  hidden linearVelocity_30 -5.09802e-09 3.85726e-10 8.4458e-10
+  hidden angularVelocity_30 1.146e-10 -6.02818e-08 -5.96665e-11
+  hidden rotation_31 0 0 -1 0.47361436
+  hidden position_31_0 0.511451
+  hidden linearVelocity_31 -5.21868e-09 3.89074e-10 -2.76255e-09
+  hidden angularVelocity_31 1.14576e-10 -6.02818e-08 -5.95837e-11
+  hidden rotation_32 -1 0 0 2.0822513
+  hidden linearVelocity_32 -6.45598e-09 3.85919e-10 -1.94647e-09
+  hidden angularVelocity_32 1.14571e-10 -6.02818e-08 -5.9582e-11
+  translation -0.40092296 0.31721565 -0.38978754
+  rotation 0.18755802 0.97599983 -0.11066307 1.0874638
+  controller "walk"
+  selfCollision TRUE
+}
+Floor {
+  size 1000 1000
+  tileSize 1 1
+  texture [
+    "textures/interlaced_parquetry.jpg"
+  ]
+}

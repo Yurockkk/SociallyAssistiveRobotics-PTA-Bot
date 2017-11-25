@@ -1,0 +1,8 @@
+Webots Proto Cache File version 1.3
+protoFileHash: a32d41d5124caa5a716cf3e412a510f1
+containsDevices: 0
+baseType: Robot
+slotType: 
+parameters: translation,rotation,controller,controllerArgs,synchronization,selfCollision,name,plasticColor,cameraWidth,cameraHeight,battery,jersey,channel,showWindow,bodySlot,headSlot,leftFootSlot,rightFootSlot,leftHandSlot,rightHandSlot
+tags: 
+info: ROBOTIS\sOP2\sis\san\sopen\splatform,\sminiature\shumanoid\srobot\sused\sfor\sresearch,\seducation\sand\soutreach\nThe\smodel\scontains\sprincipally:\n-\sthe\s20\sDOF\n-\sLEDs\n-\saccelerometer\n-\sgyro\n-\scamera\n-\srealistic\sphysics\nMore\sinfo\shere:\shttp://support.robotis.com/en/product/robotis-op2.htm\n
