@@ -168,7 +168,6 @@ void Walk::run() {
               myStep();
             }
             break;
-          
         default:
         cout << "default: User clicked " << key << endl;
           break;
@@ -203,7 +202,7 @@ void Walk::checkIfFallen() {
 
   // the robot face is down
   if (fup > acc_step) {
-    mMotionManager->a(10); // f_up
+    mMotionManager->playPage(10); // f_up
     mMotionManager->playPage(9); // init position
     fup = 0;
   }
