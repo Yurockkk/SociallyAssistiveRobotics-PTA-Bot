@@ -22,6 +22,19 @@ and run.
 #include <iostream>
 #include <fstream>
 
+#include <cstdio>
+#include <cstring>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netinet/in.h>
+
+#define SOCKET_PORT 10020
+#define SOCKET_SERVER "127.0.0.1"   /* local host */
+
+
 using namespace webots;
 using namespace managers;
 using namespace std;
@@ -78,11 +91,62 @@ void Walk::wait(int ms) {
     myStep();
 }
 
+int initClient(int &fd){
+  struct sockaddr_in address;
+  struct hostent *server;
+  int rc;
+  //int n;
+  //char buffer[256];
+  /* create the socket */
+  printf("initClient\n");
+    fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd == -1) {
+        printf("cannot create socket\n");
+
+        return -1;
+    }
+    
+    /* fill in the socket address */
+    memset(&address, 0, sizeof(struct sockaddr_in));
+    address.sin_family = AF_INET;
+    address.sin_port = htons(SOCKET_PORT);
+    server = gethostbyname(SOCKET_SERVER);
+
+    if (server) {
+        memcpy((char *) &address.sin_addr.s_addr, (char *) server->h_addr,
+               server->h_length);
+    } else {
+        printf("cannot resolve server name: %s\n", SOCKET_SERVER);
+
+        return -1;
+    }
+
+    /* connect to the server */
+    rc = connect(fd, (struct sockaddr *) &address, sizeof(struct sockaddr));
+    if (rc == -1) {
+        printf("cannot connect to the server\n");
+
+        return -1;
+    }
+    //TODO when to trigger
+    return 1;
+}
+
 
 
 // function containing the main feedback loop
 void Walk::run() {
-
+  
+  int fd = 0;
+  int n;
+  char buffer[256];
+  char command[256] = {'y','e','s'};
+  
+  if(initClient(fd) == -1){
+    printf("socket fail\n");
+  }else{
+    printf("socket success\n");
+  }
   cout << "This example illustrates Gait Manager" << endl;
   cout << "Press the space bar to start/stop walking" << endl;
   cout << "Use the arrow keys to move the robot while walking" << endl;
@@ -159,6 +223,25 @@ void Walk::run() {
         case 69 :
             cout << "User clicked E" << endl;
             mMotionManager->playPage(10, false);
+            //printf("Enter command: ");
+            //scanf("%255s", buffer);
+            
+            for(int i = 0 ; i < 256; i++){
+              buffer[i] = command[i];
+            }
+            
+            n = strlen(buffer);
+            //buffer[n++] = '\n';     /* append carriage return */
+            buffer[n] = '\0';
+            n = send(fd, buffer, n, 0);
+
+            if (strncmp(buffer, "exit", 4) == 0) {
+                //break;
+            }
+
+            n = recv(fd, buffer, 256, 0);
+            buffer[n] = '\0';
+            printf("Answer is: %s\n", buffer);
             while (mMotionManager->isMotionPlaying()) {
               mMotionManager->step(mTimeStep);
               /*

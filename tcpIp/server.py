@@ -26,7 +26,13 @@ while True:
             print >>sys.stderr, 'received "%s"' % data
             if data:
                 print >>sys.stderr, 'sending data back to the client'
-                connection.sendall(data)
+                for x in range(0, 150000):
+                    #donothing
+                    print 'loop'
+
+                print 'loop finish'
+                result = 'result from server!'
+                connection.sendall(result)
             else:
                 print >>sys.stderr, 'no more data from', client_address
                 break
