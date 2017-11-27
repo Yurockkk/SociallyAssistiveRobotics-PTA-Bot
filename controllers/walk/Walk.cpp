@@ -32,6 +32,8 @@ and run.
 #include <netinet/in.h>
 
 #define SOCKET_PORT 10020
+#define SOCKET_PORT2 10021
+
 #define SOCKET_SERVER "127.0.0.1"   /* local host */
 
 
@@ -91,7 +93,7 @@ void Walk::wait(int ms) {
     myStep();
 }
 
-int initClient(int &fd){
+int initClient(int &fd, int SOCKET){
   struct sockaddr_in address;
   struct hostent *server;
   int rc;
@@ -109,7 +111,7 @@ int initClient(int &fd){
     /* fill in the socket address */
     memset(&address, 0, sizeof(struct sockaddr_in));
     address.sin_family = AF_INET;
-    address.sin_port = htons(SOCKET_PORT);
+    address.sin_port = htons(SOCKET);
     server = gethostbyname(SOCKET_SERVER);
 
     if (server) {
@@ -138,14 +140,20 @@ int initClient(int &fd){
 void Walk::run() {
   
   int fd = 0;
+  int fd2 = 0;
   int n;
   char buffer[256];
   char command[256] = {'y','e','s'};
   
-  if(initClient(fd) == -1){
+  if(initClient(fd,SOCKET_PORT) == -1){
     printf("socket fail\n");
   }else{
     printf("socket success\n");
+  }
+  if(initClient(fd2,SOCKET_PORT2) == -1){
+    printf("socket2 fail\n");
+  }else{
+    printf("socket2 success\n");
   }
   cout << "This example illustrates Gait Manager" << endl;
   cout << "Press the space bar to start/stop walking" << endl;
@@ -210,6 +218,22 @@ void Walk::run() {
         case 87 :
             cout << "User clicked W" << endl;
             mMotionManager->playPage(6, false);
+            for(int i = 0 ; i < 256; i++){
+              buffer[i] = command[i];
+            }
+            
+            n = strlen(buffer);
+            //buffer[n++] = '\n';     /* append carriage return */
+            buffer[n] = '\0';
+            n = send(fd2, buffer, n, 0);
+
+            if (strncmp(buffer, "exit", 4) == 0) {
+                //break;
+            }
+
+            n = recv(fd2, buffer, 256, 0);
+            buffer[n] = '\0';
+            printf("Answer is: %s\n", buffer);
             while (mMotionManager->isMotionPlaying()) {
               mMotionManager->step(mTimeStep);
               /*
