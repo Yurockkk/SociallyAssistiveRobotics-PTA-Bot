@@ -31,10 +31,11 @@ and run.
 #include <unistd.h>
 #include <netinet/in.h>
 
-#define SOCKET_PORT 10020
+#define SOCKET_PORT1 10020
 #define SOCKET_PORT2 10021
 
-#define SOCKET_SERVER "127.0.0.1"   /* local host */
+#define SOCKET_SERVER1 "192.168.1.8"   /*  */
+#define SOCKET_SERVER2 "127.0.0.1"   /* local host */
 
 
 using namespace webots;
@@ -93,7 +94,7 @@ void Walk::wait(int ms) {
     myStep();
 }
 
-int initClient(int &fd, int SOCKET){
+int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
   struct sockaddr_in address;
   struct hostent *server;
   int rc;
@@ -111,8 +112,15 @@ int initClient(int &fd, int SOCKET){
     /* fill in the socket address */
     memset(&address, 0, sizeof(struct sockaddr_in));
     address.sin_family = AF_INET;
-    address.sin_port = htons(SOCKET);
-    server = gethostbyname(SOCKET_SERVER);
+    address.sin_port = htons(SOCKET_PORT);
+    char SOCKET_SERVER[16];
+    if(isSocket1){
+      server = gethostbyname(SOCKET_SERVER1);
+      strcpy(SOCKET_SERVER,SOCKET_SERVER1);
+    }else{
+      server = gethostbyname(SOCKET_SERVER2);
+      strcpy(SOCKET_SERVER,SOCKET_SERVER2);
+    }
 
     if (server) {
         memcpy((char *) &address.sin_addr.s_addr, (char *) server->h_addr,
@@ -144,16 +152,20 @@ void Walk::run() {
   int n;
   char buffer[256];
   char command[256] = {'y','e','s'};
+  bool isSocket1Established = false;
+  bool isSocket2Established = false;
   
-  if(initClient(fd,SOCKET_PORT) == -1){
-    printf("socket fail\n");
+  if(initClient(fd,SOCKET_PORT1, true) == -1){
+    printf("socket1 fail\n");
   }else{
-    printf("socket success\n");
+    printf("socket1 success\n");
+    isSocket1Established = true;
   }
-  if(initClient(fd2,SOCKET_PORT2) == -1){
+  if(initClient(fd2,SOCKET_PORT2, false) == -1){
     printf("socket2 fail\n");
   }else{
     printf("socket2 success\n");
+    isSocket2Established = true;
   }
   cout << "This example illustrates Gait Manager" << endl;
   cout << "Press the space bar to start/stop walking" << endl;
@@ -218,22 +230,25 @@ void Walk::run() {
         case 87 :
             cout << "User clicked W" << endl;
             mMotionManager->playPage(6, false);
-            for(int i = 0 ; i < 256; i++){
-              buffer[i] = command[i];
+            
+            if(isSocket2Established){
+              for(int i = 0 ; i < 256; i++){
+                buffer[i] = command[i];
+              }
+              n = strlen(buffer);
+              //buffer[n++] = '\n';     /* append carriage return */
+              buffer[n] = '\0';
+              n = send(fd2, buffer, n, 0);
+
+              if (strncmp(buffer, "exit", 4) == 0) {
+                  //break;
+              }
+
+              n = recv(fd2, buffer, 256, 0);
+              buffer[n] = '\0';
+              printf("Answer is: %s\n", buffer);
             }
             
-            n = strlen(buffer);
-            //buffer[n++] = '\n';     /* append carriage return */
-            buffer[n] = '\0';
-            n = send(fd2, buffer, n, 0);
-
-            if (strncmp(buffer, "exit", 4) == 0) {
-                //break;
-            }
-
-            n = recv(fd2, buffer, 256, 0);
-            buffer[n] = '\0';
-            printf("Answer is: %s\n", buffer);
             while (mMotionManager->isMotionPlaying()) {
               mMotionManager->step(mTimeStep);
               /*
@@ -247,25 +262,25 @@ void Walk::run() {
         case 69 :
             cout << "User clicked E" << endl;
             mMotionManager->playPage(10, false);
-            //printf("Enter command: ");
-            //scanf("%255s", buffer);
             
-            for(int i = 0 ; i < 256; i++){
-              buffer[i] = command[i];
-            }
+            if(isSocket1Established){
+              for(int i = 0 ; i < 256; i++){
+                buffer[i] = command[i];
+              }
             
-            n = strlen(buffer);
-            //buffer[n++] = '\n';     /* append carriage return */
-            buffer[n] = '\0';
-            n = send(fd, buffer, n, 0);
+              n = strlen(buffer);
+              //buffer[n++] = '\n';     /* append carriage return */
+              buffer[n] = '\0';
+              n = send(fd, buffer, n, 0);
 
-            if (strncmp(buffer, "exit", 4) == 0) {
-                //break;
+              if (strncmp(buffer, "exit", 4) == 0) {
+                  //break;
+              }
+
+              n = recv(fd, buffer, 256, 0);
+              buffer[n] = '\0';
+              printf("Answer is: %s\n", buffer);
             }
-
-            n = recv(fd, buffer, 256, 0);
-            buffer[n] = '\0';
-            printf("Answer is: %s\n", buffer);
             while (mMotionManager->isMotionPlaying()) {
               mMotionManager->step(mTimeStep);
               /*
