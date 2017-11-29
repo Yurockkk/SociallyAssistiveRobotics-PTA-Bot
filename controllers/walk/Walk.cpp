@@ -94,6 +94,22 @@ void Walk::wait(int ms) {
     myStep();
 }
 
+void communicateWithServer(int n, char buffer[5], int fd) {
+         
+  n = strlen(buffer);
+  //buffer[n++] = '\n';     /* append carriage return */
+  //buffer[n] = '\0';
+  n = send(fd, buffer, n, 0);
+
+  if (strncmp(buffer, "exit", 4) == 0) {
+    //break;
+  }
+
+  n = recv(fd, buffer, 256, 0);
+  buffer[n] = '\0';
+  printf("Answer is: %s\n", buffer);
+}
+
 int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
   struct sockaddr_in address;
   struct hostent *server;
@@ -147,9 +163,9 @@ int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
 // function containing the main feedback loop
 void Walk::run() {
   
-  int fd = 0;
-  int fd2 = 0;
-  int n;
+  int fd = -1;
+  int fd2 = -1;
+  int n = -1;
   char buffer[256];
   char command[256] = {'y','e','s'};
   bool isSocket1Established = false;
@@ -235,18 +251,8 @@ void Walk::run() {
               for(int i = 0 ; i < 256; i++){
                 buffer[i] = command[i];
               }
-              n = strlen(buffer);
-              //buffer[n++] = '\n';     /* append carriage return */
-              buffer[n] = '\0';
-              n = send(fd2, buffer, n, 0);
-
-              if (strncmp(buffer, "exit", 4) == 0) {
-                  //break;
-              }
-
-              n = recv(fd2, buffer, 256, 0);
-              buffer[n] = '\0';
-              printf("Answer is: %s\n", buffer);
+              char command[] = "CNN";
+              communicateWithServer(n, command, fd2);
             }
             
             while (mMotionManager->isMotionPlaying()) {
@@ -264,22 +270,12 @@ void Walk::run() {
             mMotionManager->playPage(10, false);
             
             if(isSocket1Established){
+            //get the command
               for(int i = 0 ; i < 256; i++){
                 buffer[i] = command[i];
               }
-            
-              n = strlen(buffer);
-              //buffer[n++] = '\n';     /* append carriage return */
-              buffer[n] = '\0';
-              n = send(fd, buffer, n, 0);
-
-              if (strncmp(buffer, "exit", 4) == 0) {
-                  //break;
-              }
-
-              n = recv(fd, buffer, 256, 0);
-              buffer[n] = '\0';
-              printf("Answer is: %s\n", buffer);
+              char command[] = "BBC";
+              communicateWithServer(n, command, fd);
             }
             while (mMotionManager->isMotionPlaying()) {
               mMotionManager->step(mTimeStep);
