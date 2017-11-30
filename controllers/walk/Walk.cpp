@@ -221,8 +221,8 @@ void Walk::run() {
   bool isWalking = false;
   
   //greeting
-  textToSpeech();
-  
+  mSpeaker->speak("Hello, my name is PTABOT. I am here to help you with your cardiac rehab therapy today.",1.0);
+
   while (true) {
     checkIfFallen();
 
@@ -270,6 +270,8 @@ void Walk::run() {
           
         case 49 ://1 key
           cout<<"1 key press"<<endl;
+          mSpeaker->speak("Let’s start with our first exercise",1.0);
+
           for(int i = 0 ; i < 3; i++){
             motion_1.play();
             wait(motion_1.getDuration());
@@ -401,7 +403,8 @@ void Walk::textToSpeech() {
 
     cout<<mSpeaker->getLanguage()<<endl;
     //mSpeaker->playSound(mSpeaker,mSpeaker,"eric.wav",1.0,1.0,0,true);
-    mSpeaker->speak("hello hello hello",1.0);
+    mSpeaker->speak("Hello, my name is PTABOT. I am here to help you with your cardiac rehab therapy today.",1.0);
+
 
 
 }
