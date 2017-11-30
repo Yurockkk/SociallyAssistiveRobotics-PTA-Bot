@@ -189,9 +189,9 @@ void Walk::run() {
   bool motionThreeFlag = false;
 
   Motion motion_1("hand_extend.motion");
-  motion_1.setLoop(true);
+  //motion_1.setLoop(true);
   Motion motion_2("hand_high.motion");
-  motion_2.setLoop(true);
+  //motion_2.setLoop(true);
   
   if(initClient(fd,SOCKET_PORT1, true) == -1){
     printf("socket1 fail\n");
@@ -216,6 +216,8 @@ void Walk::run() {
 
   // main loop here!!
   int key = 0;
+  int count = 0;
+
   bool isWalking = false;
   
   //greeting
@@ -265,6 +267,37 @@ void Walk::run() {
         case Keyboard::KEY :
           cout << "User clicked KEY" << endl;
           break;
+          
+        case 49 ://1 key
+          cout<<"1 key press"<<endl;
+          for(int i = 0 ; i < 3; i++){
+            motion_1.play();
+            wait(motion_1.getDuration());
+          }
+          
+          break; 
+          
+        case 50 ://2 key
+          cout<<"2 key press"<<endl;
+          for(int i = 0 ; i < 3; i++){
+            motion_2.play();
+            wait(motion_2.getDuration());
+          }
+          
+          break; 
+          
+        case 51 ://3 key
+          cout<<"3 key press"<<endl;
+          count = 0;
+          while(count < 3){
+            mMotionManager->playPage(15);
+            wait(1000);
+            mMotionManager->playPage(1);
+            count++;
+          }
+          
+          
+          break; 
           
         case 81 ://Q key
           cout<<"q key press"<<endl;
