@@ -29,6 +29,7 @@ class Walk : public webots::Robot {
                                      Walk();
     virtual                         ~Walk();
     void                             run();
+    void                             textToSpeech();
     void                             checkIfFallen();
 
   private:
@@ -40,6 +41,8 @@ class Walk : public webots::Robot {
     webots::Motor                   *mMotors[NMOTORS];
     webots::PositionSensor *mPositionSensors[NMOTORS];
     webots::Accelerometer           *mAccelerometer;
+    webots::Speaker                 *mSpeaker;
+
     webots::Keyboard                *mKeyboard;
 
     managers::RobotisOp2MotionManager *mMotionManager;

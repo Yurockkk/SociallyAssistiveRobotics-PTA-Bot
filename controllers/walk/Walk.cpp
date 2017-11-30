@@ -13,9 +13,14 @@ and run.
 #include <webots/Gyro.hpp>
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
+#include <webots/Speaker.hpp>
 #include <webots/Keyboard.hpp>
 #include <RobotisOp2MotionManager.hpp>
 #include <RobotisOp2GaitManager.hpp>
+#include <webots/utils/Motion.hpp>
+
+#include <string.h>
+#include <sys/wait.h>
 
 #include <cstdlib>
 #include <cmath>
@@ -34,8 +39,9 @@ and run.
 #define SOCKET_PORT1 10020
 #define SOCKET_PORT2 10021
 
-#define SOCKET_SERVER1 "192.168.1.8"   /*  */
+#define SOCKET_SERVER1 "127.0.0.1"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
+
 
 
 using namespace webots;
@@ -50,6 +56,7 @@ static const char *motorNames[NMOTORS] = {
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
 
+
 Walk::Walk():
     Robot()
 {
@@ -59,6 +66,10 @@ Walk::Walk():
   getLED("EyeLed")->set(0x00FF00);
   mAccelerometer = getAccelerometer("Accelerometer");
   mAccelerometer->enable(mTimeStep);
+  
+  mSpeaker = getSpeaker("Speaker");
+  mSpeaker->setLanguage("en-US");
+
 
   getGyro("Gyro")->enable(mTimeStep);
 
@@ -162,7 +173,9 @@ int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
 
 // function containing the main feedback loop
 void Walk::run() {
-  
+
+  // First step to update sensors values
+  myStep();
   int fd = -1;
   int fd2 = -1;
   int n = -1;
@@ -170,6 +183,15 @@ void Walk::run() {
   char command[256] = {'y','e','s'};
   bool isSocket1Established = false;
   bool isSocket2Established = false;
+  
+  bool motionOneFlag = false;
+  bool motionTwoFlag = false;
+  bool motionThreeFlag = false;
+
+  Motion motion_1("hand_extend.motion");
+  motion_1.setLoop(true);
+  Motion motion_2("hand_high.motion");
+  motion_2.setLoop(true);
   
   if(initClient(fd,SOCKET_PORT1, true) == -1){
     printf("socket1 fail\n");
@@ -187,17 +209,18 @@ void Walk::run() {
   cout << "Press the space bar to start/stop walking" << endl;
   cout << "Use the arrow keys to move the robot while walking" << endl;
 
-  // First step to update sensors values
-  myStep();
-
+  
   // stand up from initial movement
   mMotionManager->playPage(9); // init position
   wait(200);
 
-  // main loop
+  // main loop here!!
   int key = 0;
   bool isWalking = false;
-
+  
+  //greeting
+  textToSpeech();
+  
   while (true) {
     checkIfFallen();
 
@@ -241,6 +264,13 @@ void Walk::run() {
           break;
         case Keyboard::KEY :
           cout << "User clicked KEY" << endl;
+          break;
+          
+        case 81 ://Q key
+          cout<<"q key press"<<endl;
+          
+          motion_1.play();
+          motionThreeFlag = true;
           break;
           
         case 87 :
@@ -331,3 +361,15 @@ void Walk::checkIfFallen() {
     fdown = 0;
   }
 }
+
+void Walk::textToSpeech() {
+   
+    myStep();
+
+    cout<<mSpeaker->getLanguage()<<endl;
+    //mSpeaker->playSound(mSpeaker,mSpeaker,"eric.wav",1.0,1.0,0,true);
+    mSpeaker->speak("hello hello hello",1.0);
+
+
+}
+

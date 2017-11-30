@@ -1,0 +1,4 @@
+#WEBOTS_MOTION,V1.0,ArmLowerL,ArmUpperL,ShoulderL,ArmLowerR,ArmUpperR,ShoulderR
+00:00:000,handsU,0.02,-0.8,-1.65,-0.02,0.8,1.65
+00:02:000,handsUp,1.63,0.77,-3.14,-1.65,-0.68,3.14
+00:04:000,handsU,0.02,-0.8,-1.65,-0.02,0.8,1.65
