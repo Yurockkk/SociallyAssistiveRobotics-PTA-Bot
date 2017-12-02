@@ -6,20 +6,18 @@
 using namespace webots;
 
 int main()
-{
-  
-  
+{ 
   Walk *controller = new Walk();
   controller->run();
+  controller->textToSpeechGreeting();
+  controller->runExerciseOne();
+  controller->runExerciseTwo();
+  controller->runExerciseThree();
+  controller->textToSpeechEnding();
   delete controller;
   
   return EXIT_FAILURE;
-  
-  //MotionPlayer *controller = new MotionPlayer();
-  //controller->textToSpeech();
-  //controller->run();
-  //delete controller;
-  //return EXIT_FAILURE;
+
 }
 
 

@@ -9,23 +9,21 @@ and run.
 */
 #include "Walk.hpp"
 #include <webots/LED.hpp>
-#include <webots/Accelerometer.hpp>
-#include <webots/Gyro.hpp>
 #include <webots/Motor.hpp>
 #include <webots/PositionSensor.hpp>
+#include <RobotisOp2MotionManager.hpp>
+#include <webots/utils/Motion.hpp>
 #include <webots/Speaker.hpp>
 #include <webots/Keyboard.hpp>
-#include <RobotisOp2MotionManager.hpp>
-#include <RobotisOp2GaitManager.hpp>
-#include <webots/utils/Motion.hpp>
-
+#include <unistd.h>
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
 #include <string.h>
+#include <unistd.h>
 #include <sys/wait.h>
 
-#include <cstdlib>
-#include <cmath>
-#include <iostream>
-#include <fstream>
+//#include <cmath>
 
 #include <cstdio>
 #include <cstring>
@@ -56,48 +54,43 @@ static const char *motorNames[NMOTORS] = {
   "FootR"     /*ID17*/, "FootL"     /*ID18*/, "Neck"      /*ID19*/, "Head"      /*ID20*/
 };
 
-
+//Constructor
 Walk::Walk():
     Robot()
 {
+  //Get time step
   mTimeStep = getBasicTimeStep();
-
+ 
   getLED("HeadLed")->set(0xFF0000);
   getLED("EyeLed")->set(0x00FF00);
-  mAccelerometer = getAccelerometer("Accelerometer");
-  mAccelerometer->enable(mTimeStep);
-  
   mSpeaker = getSpeaker("Speaker");
   mSpeaker->setLanguage("en-US");
-
-
-  getGyro("Gyro")->enable(mTimeStep);
-
+  
   for (int i=0; i<NMOTORS; i++) {
-    mMotors[i] = getMotor(motorNames[i]);
-    string sensorName = motorNames[i];
-    sensorName.push_back('S');
-    mPositionSensors[i] = getPositionSensor(sensorName);
-    mPositionSensors[i]->enable(mTimeStep);
+   mMotors[i] = getMotor(motorNames[i]);
+   string sensorName = motorNames[i];
+   sensorName.push_back('S');
+   mPositionSensors[i] = getPositionSensor(sensorName);
+   mPositionSensors[i]->enable(mTimeStep);
   }
-
   mKeyboard = getKeyboard();
   mKeyboard->enable(mTimeStep);
-
+  
   mMotionManager = new RobotisOp2MotionManager(this);
-  mGaitManager   = new RobotisOp2GaitManager(this, "config.ini");
-
 }
 
+//Destructor
 Walk::~Walk() {
 }
 
+//Step function
 void Walk::myStep() {
   int ret = step(mTimeStep);
   if (ret == -1)
     exit(EXIT_SUCCESS);
 }
 
+//Wait function
 void Walk::wait(int ms) {
   double startTime = getTime();
   double s = (double) ms / 1000.0;
@@ -184,15 +177,6 @@ void Walk::run() {
   bool isSocket1Established = false;
   bool isSocket2Established = false;
   
-  bool motionOneFlag = false;
-  bool motionTwoFlag = false;
-  bool motionThreeFlag = false;
-
-  Motion motion_1("hand_extend.motion");
-  //motion_1.setLoop(true);
-  Motion motion_2("hand_high.motion");
-  //motion_2.setLoop(true);
-  
   if(initClient(fd,SOCKET_PORT1, true) == -1){
     printf("socket1 fail\n");
   }else{
@@ -205,207 +189,237 @@ void Walk::run() {
     printf("socket2 success\n");
     isSocket2Established = true;
   }
-  cout << "This example illustrates Gait Manager" << endl;
-  cout << "Press the space bar to start/stop walking" << endl;
-  cout << "Use the arrow keys to move the robot while walking" << endl;
 
-  
-  // stand up from initial movement
-  mMotionManager->playPage(9); // init position
-  wait(200);
-
-  // main loop here!!
-  int key = 0;
-  int count = 0;
-
-  bool isWalking = false;
-  
-  //greeting
-  mSpeaker->speak("Hello, my name is PTABOT. I am here to help you with your cardiac rehab therapy today.",1.0);
-
-  while (true) {
-    checkIfFallen();
-
-    mGaitManager->setXAmplitude(0.0);
-    mGaitManager->setAAmplitude(0.0);
-
-    // get keyboard key
-    while((key = mKeyboard->getKey()) >= 0) {
-      switch(key) {
-        case ' ' : // Space bar
-          if(isWalking) {
-            mGaitManager->stop();
-            isWalking = false;
-            wait(200);
-          }
-          else {
-            mGaitManager->start();
-            isWalking = true;
-            wait(200);
-          }
-          break;
-        case Keyboard::UP :
-          mGaitManager->setXAmplitude(1.0);
-          cout << "User clicked up" << endl;
-
-          break;
-        case Keyboard::DOWN :
-          mGaitManager->setXAmplitude(-1.0);
-          cout << "User clicked down" << endl;
-
-          break;
-        case Keyboard::RIGHT :
-          mGaitManager->setAAmplitude(-0.5);
-          cout << "User clicked right" << endl;
-
-          break;
-        case Keyboard::LEFT :
-          mGaitManager->setAAmplitude(0.5);
-          cout << "User clicked left" << endl;
-
-          break;
-        case Keyboard::KEY :
-          cout << "User clicked KEY" << endl;
-          break;
-          
-        case 49 ://1 key
-          cout<<"1 key press"<<endl;
-          mSpeaker->speak("Let’s start with our first exercise",1.0);
-
-          for(int i = 0 ; i < 3; i++){
-            motion_1.play();
-            wait(motion_1.getDuration());
-          }
-          
-          break; 
-          
-        case 50 ://2 key
-          cout<<"2 key press"<<endl;
-          for(int i = 0 ; i < 3; i++){
-            motion_2.play();
-            wait(motion_2.getDuration());
-          }
-          
-          break; 
-          
-        case 51 ://3 key
-          cout<<"3 key press"<<endl;
-          count = 0;
-          while(count < 3){
-            mMotionManager->playPage(15);
-            wait(1000);
-            mMotionManager->playPage(1);
-            count++;
-          }
-          
-          
-          break; 
-          
-        case 81 ://Q key
-          cout<<"q key press"<<endl;
-          
-          motion_1.play();
-          motionThreeFlag = true;
-          break;
-          
-        case 87 :
-            cout << "User clicked W" << endl;
-            mMotionManager->playPage(6, false);
-            
-            if(isSocket2Established){
-              for(int i = 0 ; i < 256; i++){
-                buffer[i] = command[i];
-              }
-              char command[] = "CNN";
-              communicateWithServer(n, command, fd2);
-            }
-            
-            while (mMotionManager->isMotionPlaying()) {
-              mMotionManager->step(mTimeStep);
-              /*
-                * Do something,
-                * like image processing for example
-              */
-              myStep();
-            }
-            break;
-            
-        case 69 :
-            cout << "User clicked E" << endl;
-            mMotionManager->playPage(10, false);
-            
-            if(isSocket1Established){
-            //get the command
-              for(int i = 0 ; i < 256; i++){
-                buffer[i] = command[i];
-              }
-              char command[] = "BBC";
-              communicateWithServer(n, command, fd);
-            }
-            while (mMotionManager->isMotionPlaying()) {
-              mMotionManager->step(mTimeStep);
-              /*
-                * Do something,
-                * like image processing for example
-              */
-              myStep();
-            }
-            break;
-        default:
-        cout << "default: User clicked " << key << endl;
-          break;
-      }
-    }
-
-    mGaitManager->step(mTimeStep);
+    //mGaitManager->step(mTimeStep);
 
     // step
     myStep();
   }
+
+
+void Walk::runExerciseOne() {
+
+  cout << "-------MotionPlayer first exercise of ROBOTIS OP2-------" << endl;
+  cout << "This exercise plays a Webots hand_extend.motion file" << endl;
+
+  // step
+  myStep();
+  
+   /*
+    bool motionOneFlag = false;
+    bool motionTwoFlag = false;
+    bool motionThreeFlag = false;
+    */
+    Motion motion_1("hand_extend.motion");
+    int time1 = motion_1.getDuration();
+    for (int i=0; i<2; i++){
+    	motion_1.play();
+    	wait(time1);
+    }
+    
+    mSpeaker->speak("Please start now.",1.0);
+    wait(2000); 
+    
+   // motion_1.setLoop(true);
+   // motion_2.setLoop(true);
+    
+    /*while(true){
+    
+        switch(mKeyboard->getKey()) {
+        case 81 ://Q key
+          cout<<"q key press"<<endl;
+          motion_1.stop();
+          motion_2.stop();
+          motionThreeFlag = true;
+          break;
+        case 87 ://W key
+          cout<<"w key press"<<endl;
+          motionThreeFlag = false;
+          break;
+        case Keyboard::UP :
+          //cout<<"pressed up key"<<endl;
+          motion_2.stop();
+          motionTwoFlag = false;
+          motionThreeFlag = false;
+          motion_1.play();
+          motionOneFlag = true;
+          break;
+        case Keyboard::DOWN :
+          //cout<<"pressed down key"<<endl;
+          motion_1.stop();
+          motionOneFlag = false;
+          break;
+        case Keyboard::RIGHT :
+          //cout<<"pressed right key"<<endl;
+          motion_2.stop();
+          motionTwoFlag = false;
+          break;
+        case Keyboard::LEFT :
+          //cout<<"pressed left key"<<endl;
+          motion_1.stop();
+          motionOneFlag = false;
+          motionThreeFlag = false;
+          motion_2.play();
+          motionTwoFlag = true;
+          break;
+      }
+     
+    if (motionThreeFlag){
+      mMotionManager->playPage(1);
+      wait(1000);
+      mMotionManager->playPage(15);
+      motionThreeFlag = false;
+      cout<<"finsh"<<endl;
+    }
+      myStep();
+    }
+    
+  while (true){
+      // play the hello motion
+    mMotionManager->playPage(1); // init position
+    wait(1000);
+    mMotionManager->playPage(15);
+  }*/
 }
 
-void Walk::checkIfFallen() {
-  static int fup = 0;
-  static int fdown = 0;
-  static const double acc_tolerance = 80.0;
-  static const double acc_step = 100;
+void Walk::runExerciseTwo() {
 
-  // count how many steps the accelerometer
-  // says that the robot is down
-  const double *acc = mAccelerometer->getValues();
-  if (acc[1] < 512.0 - acc_tolerance)
-    fup++;
-  else
-    fup = 0;
+  cout << "-------MotionPlayer second exercise of ROBOTIS OP2-------" << endl;
+  cout << "This exercise plays a Webots hand_high.motion file" << endl;
 
-  if (acc[1] > 512.0 + acc_tolerance)
-    fdown++;
-  else
-    fdown = 0;
+  // step
+  myStep();
+  
 
-  // the robot face is down
-  if (fup > acc_step) {
-    mMotionManager->playPage(10); // f_up
-    mMotionManager->playPage(9); // init position
-    fup = 0;
-  }
-  // the back face is down
-  else if (fdown > acc_step) {
-    mMotionManager->playPage(11); // b_up
-    mMotionManager->playPage(9); // init position
-    fdown = 0;
-  }
+    Motion motion_2("hand_high.motion");
+    int time2 = motion_2.getDuration();
+    for (int i=0; i<2; i++){
+    	motion_2.play();
+    	wait(time2);
+    }
+    
+    mSpeaker->speak("Please start now.",1.0);
+    wait(2000); 
 }
 
-void Walk::textToSpeech() {
+
+void Walk::runExerciseThree() {
+
+  cout << "-------MotionPlayer last exercise of ROBOTIS OP2-------" << endl;
+  cout << "This exercise plays blend knee motion" << endl;
+
+  // step
+  myStep();
+  
+   /*
+    bool motionOneFlag = false;
+    bool motionTwoFlag = false;
+    bool motionThreeFlag = false;
+    */
+    for (int i=0; i<2; i++){
+    mMotionManager->playPage(15);
+    wait(500);
+    mMotionManager->playPage(1);
+    }
+    
+    mSpeaker->speak("Please start now.",1.0);
+    wait(2000); 
+
+}
    
-    myStep();
+void Walk::textToSpeechGreeting() {
 
+  myStep();
+  
     cout<<mSpeaker->getLanguage()<<endl;
+    mMotionManager->playPage(1);
     //mSpeaker->playSound(mSpeaker,mSpeaker,"eric.wav",1.0,1.0,0,true);
     mSpeaker->speak("Hello, my name is PTABOT. I am here to help you with your cardiac rehab therapy today.",1.0);
-
-
+    wait(6000);
+    mSpeaker->speak("Let’s start with our first exercise. Please follow the demonstration and repeat five times.",1.0);
+    wait(6000);    
+    //mSpeaker->speak("Thank you for coming. See you next time.",1.0);
+//    while(true){
+//     myStep();
+//    }
+/*   
+    string text = "how are you";
+    string mLanguage = "en";
+    fprintf(stderr, "Speaker: Saying \"%s\" ...\n", text.c_str());
+    char *buffer = (char *)malloc(strlen(text.c_str())+3);
+    sprintf(buffer, "\"%s\"", text.c_str());
+    execl("/Users/hannah/Downloads/espeak-1.45.04-OSX/espeak-1.45.04/speak", "espeak", buffer, "-v", mLanguage.c_str(), (char *)NULL);
+    //free(buffer);
+*/  
 
 }
 
+void Walk::textToSpeechSecondExercise() {
+
+  myStep();
+  
+    cout<<mSpeaker->getLanguage()<<endl;
+
+    mSpeaker->speak("Now let’s move on to do the next exercise. Please follow the demonstration",1.0);
+
+}
+
+void Walk::textToSpeechThirdExercise() {
+
+  myStep();
+       
+    mSpeaker->speak("This is your last exercise. Please follow the demonstration",1.0);
+
+}
+
+void Walk::textToSpeechSad() {
+
+  myStep();
+  
+    mSpeaker->speak("And repeat three times",1.0);
+
+}
+
+void Walk::textToSpeechHappy() {
+
+  myStep();
+    
+    mSpeaker->speak("And repeat eight times",1.0);
+
+}
+
+void Walk::textToSpeechSadEncouragement() {
+
+  myStep();
+    
+    mSpeaker->speak("You can do it!",1.0);
+    wait(5000);
+    mSpeaker->speak("Push through.",1.0);
+    wait(5000);
+    mSpeaker->speak("This will soon be over.",1.0);
+    wait(5000);
+    mSpeaker->speak("You’re almost done.",1.0);
+    wait(5000);
+
+}
+
+void Walk::textToSpeechHappyEncouragement() {
+
+  myStep();
+
+    mSpeaker->speak("Good Job!",1.0);
+    wait(5000);
+    mSpeaker->speak("Keep Going!",1.0);
+    wait(5000);
+    mSpeaker->speak("You’re doing well.",1.0);
+    wait(5000);
+
+}
+
+
+void Walk::textToSpeechEnding() {
+
+  myStep();
+ 
+    mSpeaker->speak("Thank you for coming. You did a great job today. See you next time.",1.0);
+}
