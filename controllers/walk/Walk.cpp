@@ -37,7 +37,7 @@ and run.
 #define SOCKET_PORT1 10023
 #define SOCKET_PORT2 10020
 
-#define SOCKET_SERVER1 "192.168.1.4"   /*  */
+#define SOCKET_SERVER1 "10.199.23.100"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
 
 
@@ -204,12 +204,7 @@ int Walk::runExerciseOne(int n, char buffer[5], int fd) {
 
   // step
   myStep();
-  
-   /*
-    bool motionOneFlag = false;
-    bool motionTwoFlag = false;
-    bool motionThreeFlag = false;
-    */
+
     Motion motion_1("hand_extend.motion");
     int time1 = motion_1.getDuration();
     for (int i=0; i<2; i++){
@@ -221,66 +216,7 @@ int Walk::runExerciseOne(int n, char buffer[5], int fd) {
     wait(2000);
     char command[] = "5";
     return communicateWithServer(n,command,fd);
-   // motion_1.setLoop(true);
-   // motion_2.setLoop(true);
-    
-    /*while(true){
-    
-        switch(mKeyboard->getKey()) {
-        case 81 ://Q key
-          cout<<"q key press"<<endl;
-          motion_1.stop();
-          motion_2.stop();
-          motionThreeFlag = true;
-          break;
-        case 87 ://W key
-          cout<<"w key press"<<endl;
-          motionThreeFlag = false;
-          break;
-        case Keyboard::UP :
-          //cout<<"pressed up key"<<endl;
-          motion_2.stop();
-          motionTwoFlag = false;
-          motionThreeFlag = false;
-          motion_1.play();
-          motionOneFlag = true;
-          break;
-        case Keyboard::DOWN :
-          //cout<<"pressed down key"<<endl;
-          motion_1.stop();
-          motionOneFlag = false;
-          break;
-        case Keyboard::RIGHT :
-          //cout<<"pressed right key"<<endl;
-          motion_2.stop();
-          motionTwoFlag = false;
-          break;
-        case Keyboard::LEFT :
-          //cout<<"pressed left key"<<endl;
-          motion_1.stop();
-          motionOneFlag = false;
-          motionThreeFlag = false;
-          motion_2.play();
-          motionTwoFlag = true;
-          break;
-      }
-     
-    if (motionThreeFlag){
-      mMotionManager->playPage(1);
-      wait(1000);
-      mMotionManager->playPage(15);
-      motionThreeFlag = false;
-      cout<<"finsh"<<endl;
-    }
-      myStep();
-    }
-    
-  while (true){
-      // play the hello motion
-    mMotionManager->playPage(1); // init position
-    wait(1000);
-    mMotionManager->playPage(15);
-  }*/
+   
 }
 
 void Walk::runExerciseTwo() {
