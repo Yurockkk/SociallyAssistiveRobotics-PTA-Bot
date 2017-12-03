@@ -23,8 +23,8 @@ class Walk : public webots::Robot {
   public:
              Walk();
     virtual  ~Walk();
-    void     run();
-    void     runExerciseOne();
+    void     run(int fd, int fd2,int n);
+    int      runExerciseOne(int n, char buffer[5], int fd);
     void     runExerciseTwo();
     void     runExerciseThree();
     void     textToSpeechGreeting();

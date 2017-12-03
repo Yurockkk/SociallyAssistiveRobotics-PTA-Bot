@@ -34,10 +34,10 @@ and run.
 #include <unistd.h>
 #include <netinet/in.h>
 
-#define SOCKET_PORT1 10020
+#define SOCKET_PORT1 10023
 #define SOCKET_PORT2 10021
 
-#define SOCKET_SERVER1 "127.0.0.1"   /*  */
+#define SOCKET_SERVER1 "192.168.1.4"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
 
 
@@ -98,9 +98,10 @@ void Walk::wait(int ms) {
     myStep();
 }
 
-void communicateWithServer(int n, char buffer[5], int fd) {
-         
+int communicateWithServer(int n, char buffer[5], int fd) {
+  int result = -1;       
   n = strlen(buffer);
+  printf("buffer:%s\n",buffer);
   //buffer[n++] = '\n';     /* append carriage return */
   //buffer[n] = '\0';
   n = send(fd, buffer, n, 0);
@@ -112,6 +113,8 @@ void communicateWithServer(int n, char buffer[5], int fd) {
   n = recv(fd, buffer, 256, 0);
   buffer[n] = '\0';
   printf("Answer is: %s\n", buffer);
+  result = int(buffer[0]);
+  return result;
 }
 
 int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
@@ -165,18 +168,12 @@ int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
 
 
 // function containing the main feedback loop
-void Walk::run() {
+void Walk::run(int fd, int fd2, int n) {
 
   // First step to update sensors values
   myStep();
-  int fd = -1;
-  int fd2 = -1;
-  int n = -1;
-  char buffer[256];
-  char command[256] = {'y','e','s'};
   bool isSocket1Established = false;
   bool isSocket2Established = false;
-  
   if(initClient(fd,SOCKET_PORT1, true) == -1){
     printf("socket1 fail\n");
   }else{
@@ -197,7 +194,7 @@ void Walk::run() {
   }
 
 
-void Walk::runExerciseOne() {
+int Walk::runExerciseOne(int n, char buffer[5], int fd) {
 
   cout << "-------MotionPlayer first exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_extend.motion file" << endl;
@@ -218,8 +215,9 @@ void Walk::runExerciseOne() {
     }
     
     mSpeaker->speak("Please start now.",1.0);
-    wait(2000); 
-    
+    wait(2000);
+    char command[] = "CNN";
+    return communicateWithServer(n,command,fd);
    // motion_1.setLoop(true);
    // motion_2.setLoop(true);
     
