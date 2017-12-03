@@ -35,7 +35,7 @@ and run.
 #include <netinet/in.h>
 
 #define SOCKET_PORT1 10023
-#define SOCKET_PORT2 10021
+#define SOCKET_PORT2 10020
 
 #define SOCKET_SERVER1 "192.168.1.4"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
@@ -99,6 +99,7 @@ void Walk::wait(int ms) {
 }
 
 int communicateWithServer(int n, char buffer[5], int fd) {
+  printf("in communicateWithServer, n=%d, fd=%d",n,fd);
   int result = -1;       
   n = strlen(buffer);
   printf("buffer:%s\n",buffer);
@@ -113,7 +114,9 @@ int communicateWithServer(int n, char buffer[5], int fd) {
   n = recv(fd, buffer, 256, 0);
   buffer[n] = '\0';
   printf("Answer is: %s\n", buffer);
-  result = int(buffer[0]);
+  result = atoi(buffer);
+  printf("result is: %d\n", result);
+
   return result;
 }
 
@@ -168,7 +171,7 @@ int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
 
 
 // function containing the main feedback loop
-void Walk::run(int fd, int fd2, int n) {
+void Walk::run(int &fd, int &fd2,int &n) {
 
   // First step to update sensors values
   myStep();
@@ -195,7 +198,7 @@ void Walk::run(int fd, int fd2, int n) {
 
 
 int Walk::runExerciseOne(int n, char buffer[5], int fd) {
-
+  printf("in runExerciseOne, n=%d, fd=%d",n,fd);
   cout << "-------MotionPlayer first exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_extend.motion file" << endl;
 
@@ -216,7 +219,7 @@ int Walk::runExerciseOne(int n, char buffer[5], int fd) {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000);
-    char command[] = "CNN";
+    char command[] = "5";
     return communicateWithServer(n,command,fd);
    // motion_1.setLoop(true);
    // motion_2.setLoop(true);
