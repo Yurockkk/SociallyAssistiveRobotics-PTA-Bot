@@ -410,3 +410,8 @@ void Walk::getUpdatedLevel(int &currentLevel,int &resultFromCNN){
     }
   }
 }
+
+void Walk::textToSpeechEncourage(){
+      mSpeaker->speak("Good Job!",1.0);
+      wait(1000);
+}

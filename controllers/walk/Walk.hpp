@@ -36,6 +36,7 @@ class Walk : public webots::Robot {
     void     textToSpeechHappyEncouragement();
     void     textToSpeechEnding();
     void     getUpdatedLevel(int &currentLevel,int &resultFromCNN);
+    void     textToSpeechEncourage();
 
   private:
     int      mTimeStep;

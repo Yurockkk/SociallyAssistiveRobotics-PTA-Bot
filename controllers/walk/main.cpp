@@ -19,9 +19,11 @@ int main()
   controller->textToSpeechGreeting();
   resultFromCNN = controller->runExerciseOne(n,command,fd);
   std::cout << "after movement1, Result from CNN " << resultFromCNN << std::endl;
+  controller->textToSpeechEncourage();
   controller->getUpdatedLevel(currentLevel,resultFromCNN);
   resultFromCNN = controller->runExerciseTwo(n,currentLevel,fd);
   std::cout << "after movement2, Result from CNN " << resultFromCNN << std::endl;
+  controller->textToSpeechEncourage();
   controller->getUpdatedLevel(currentLevel,resultFromCNN);
   resultFromCNN = controller->runExerciseThree(n,currentLevel,fd);
   std::cout << "after movement3, Result from CNN " << resultFromCNN << std::endl;
