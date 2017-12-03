@@ -37,10 +37,10 @@ and run.
 #include <netinet/in.h>
 
 #define SOCKET_PORT1 10020
-#define SOCKET_PORT2 10021
+#define SOCKET_PORT2 10023
 
 #define SOCKET_SERVER1 "127.0.0.1"   /*  */
-#define SOCKET_SERVER2 "127.0.0.1"   /* local host */
+#define SOCKET_SERVER2 "192.168.1.4"   /* local host */
 
 
 
@@ -106,7 +106,7 @@ void Walk::wait(int ms) {
 }
 
 void communicateWithServer(int n, char buffer[5], int fd) {
-         
+  printf("in communicateWithServer, n=%d, fd=%d",n,fd);       
   n = strlen(buffer);
   //buffer[n++] = '\n';     /* append carriage return */
   //buffer[n] = '\0';
@@ -316,7 +316,7 @@ void Walk::run() {
               for(int i = 0 ; i < 256; i++){
                 buffer[i] = command[i];
               }
-              char command[] = "CNN";
+              char command[] = "5";
               communicateWithServer(n, command, fd2);
             }
             
