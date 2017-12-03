@@ -227,6 +227,21 @@ int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
   // step
   myStep();
   
+    char command[10];
+    switch(currentLevel){
+      case 0:  strncpy(command, "5", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat three times.",1.0);
+               break;
+      case 1:  strncpy(command, "10", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat five times.",1.0);
+
+               break;
+      case 2:  strncpy(command, "15", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat eight times.",1.0);
+               break;
+    }
+    command[sizeof(command) - 1] = 0;
+  
 
     Motion motion_2("hand_high.motion");
     int time2 = motion_2.getDuration();
@@ -237,16 +252,7 @@ int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
-    char command[10];
-    switch(currentLevel){
-      case 0:  strncpy(command, "5", sizeof(command) - 1);
-               break;
-      case 1:  strncpy(command, "10", sizeof(command) - 1);
-               break;
-      case 2:  strncpy(command, "15", sizeof(command) - 1);
-               break;
-    }
-    command[sizeof(command) - 1] = 0;
+    
     return communicateWithServer(n,command,fd);
 }
 
@@ -258,6 +264,21 @@ int Walk::runExerciseThree(int n, int currentLevel, int fd) {
 
   // step
   myStep();
+  
+  char command[10];
+    switch(currentLevel){
+      case 0:  strncpy(command, "5", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat three times.",1.0);
+               break;
+      case 1:  strncpy(command, "10", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat five times.",1.0);
+
+               break;
+      case 2:  strncpy(command, "15", sizeof(command) - 1);
+               mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat eight times.",1.0);
+               break;
+    }
+    command[sizeof(command) - 1] = 0;
   
    /*
     bool motionOneFlag = false;
@@ -272,16 +293,7 @@ int Walk::runExerciseThree(int n, int currentLevel, int fd) {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
-    char command[10];
-    switch(currentLevel){
-      case 0:  strncpy(command, "5", sizeof(command) - 1);
-               break;
-      case 1:  strncpy(command, "10", sizeof(command) - 1);
-               break;
-      case 2:  strncpy(command, "15", sizeof(command) - 1);
-               break;
-    }
-    command[sizeof(command) - 1] = 0;
+    
     return communicateWithServer(n,command,fd);
 
 }
