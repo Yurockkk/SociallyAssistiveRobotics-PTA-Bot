@@ -214,13 +214,13 @@ int Walk::runExerciseOne(int n, char buffer[5], int fd) {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000);
-    char command[] = "5";
+    char command[] = "10";
     return communicateWithServer(n,command,fd);
    
 }
 
-void Walk::runExerciseTwo() {
-
+int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
+  printf("in runExerciseTwo, currentLevel=%d",currentLevel);
   cout << "-------MotionPlayer second exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_high.motion file" << endl;
 
@@ -237,11 +237,22 @@ void Walk::runExerciseTwo() {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
+    char command[10];
+    switch(currentLevel){
+      case 0:  strncpy(command, "5", sizeof(command) - 1);
+               break;
+      case 1:  strncpy(command, "10", sizeof(command) - 1);
+               break;
+      case 2:  strncpy(command, "15", sizeof(command) - 1);
+               break;
+    }
+    command[sizeof(command) - 1] = 0;
+    return communicateWithServer(n,command,fd);
 }
 
 
-void Walk::runExerciseThree() {
-
+int Walk::runExerciseThree(int n, int currentLevel, int fd) {
+  printf("in runExerciseThree, currentLevel=%d",currentLevel);
   cout << "-------MotionPlayer last exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays blend knee motion" << endl;
 
@@ -261,6 +272,17 @@ void Walk::runExerciseThree() {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
+    char command[10];
+    switch(currentLevel){
+      case 0:  strncpy(command, "5", sizeof(command) - 1);
+               break;
+      case 1:  strncpy(command, "10", sizeof(command) - 1);
+               break;
+      case 2:  strncpy(command, "15", sizeof(command) - 1);
+               break;
+    }
+    command[sizeof(command) - 1] = 0;
+    return communicateWithServer(n,command,fd);
 
 }
    
@@ -359,4 +381,20 @@ void Walk::textToSpeechEnding() {
   myStep();
  
     mSpeaker->speak("Thank you for coming. You did a great job today. See you next time.",1.0);
+}
+
+void Walk::getUpdatedLevel(int &currentLevel,int &resultFromCNN){
+  if(resultFromCNN == 0){
+    std::cout << "Result from CNN == 0, let's decrease level if posibble"<< std::endl;
+    currentLevel--;
+    if(currentLevel < 0){
+      currentLevel = 0;
+    }
+  }else if(resultFromCNN == 1){
+    std::cout << "Result from CNN == 1, let's increase level if posibble"<< std::endl;
+    currentLevel++;
+    if(currentLevel > 2){
+      currentLevel = 2;
+    }
+  }
 }
