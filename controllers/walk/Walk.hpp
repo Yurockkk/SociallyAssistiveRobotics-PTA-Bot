@@ -24,9 +24,9 @@ class Walk : public webots::Robot {
              Walk();
     virtual  ~Walk();
     void     run(int &fd, int &fd2,int &n);
-    int      runExerciseOne(int n, char buffer[5], int fd);
-    int      runExerciseTwo(int n, int currentLevel, int fd);
-    int      runExerciseThree(int n, int currentLevel, int fd);
+    void     runExerciseOne(int n, char buffer[5], int fd);
+    void     runExerciseTwo(int n, int currentLevel, int fd);
+    void     runExerciseThree(int n, int currentLevel, int fd);
     void     textToSpeechGreeting();
     void     textToSpeechSad();
     void     textToSpeechSoso();
@@ -36,6 +36,7 @@ class Walk : public webots::Robot {
     void     textToSpeechEnding();
     void     getUpdatedLevel(int &currentLevel,int &resultFromCNN);
     void     textToSpeechEncourage();
+    int      communicateWithServer(int n, int currentLevel, int fd, int fd2);
 
   private:
     int      mTimeStep;

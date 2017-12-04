@@ -34,10 +34,10 @@ and run.
 #include <unistd.h>
 #include <netinet/in.h>
 
-#define SOCKET_PORT1 10023
+#define SOCKET_PORT1 10024
 #define SOCKET_PORT2 10020
 
-#define SOCKET_SERVER1 "10.199.23.100"   /*  */
+#define SOCKET_SERVER1 "10.199.23.140"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
 
 
@@ -98,26 +98,66 @@ void Walk::wait(int ms) {
     myStep();
 }
 
-int communicateWithServer(int n, char buffer[5], int fd) {
+int Walk::communicateWithServer(int n, int currentLevel, int fd, int fd2) {
   printf("in communicateWithServer, n=%d, fd=%d",n,fd);
-  int result = -1;       
-  n = strlen(buffer);
-  printf("buffer:%s\n",buffer);
+  char commandCNN[10];
+  char commandKinect[10];
+    switch(currentLevel){
+      case 0:  strncpy(commandCNN, "8", sizeof(commandCNN) - 1);
+               strncpy(commandKinect, "9", sizeof(commandKinect) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat three times.",1.0);
+               wait(6000); 
+               break;
+      case 1:  strncpy(commandCNN, "14", sizeof(commandCNN) - 1);
+               strncpy(commandKinect, "15", sizeof(commandKinect) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat five times.",1.0);
+               wait(6000); 
+               break;
+      case 2:  strncpy(commandCNN, "23", sizeof(commandCNN) - 1);
+               strncpy(commandKinect, "24", sizeof(commandKinect) - 1);
+               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat eight times.",1.0);
+               wait(6000); 
+               break;
+    }
+    commandCNN[sizeof(commandCNN) - 1] = 0;
+    commandKinect[sizeof(commandKinect) - 1] = 0;
+    
+  int result = -1; 
+  int n2 = -1;      
+  n = strlen(commandCNN);
+  n2 = strlen(commandKinect);;
+  printf("commandCNN:%s\n",commandCNN);
+   printf("commandKinect:%s\n",commandKinect);
+
   //buffer[n++] = '\n';     /* append carriage return */
   //buffer[n] = '\0';
-  n = send(fd, buffer, n, 0);
-
-  if (strncmp(buffer, "exit", 4) == 0) {
+  n = send(fd, commandCNN, n, 0);
+  n2 = send(fd2,commandKinect,n,0);
+  //if (strncmp(commandCNN, "exit", 4) == 0) {
     //break;
-  }
+  //}
+  //wait(1000);
+    wait(3000);
+    mSpeaker->speak("You can do it!",1.0);
+    printf("in communicateWithServer while loop\n");
+    mSpeaker->speak("Keep Going!",1.0);
+    wait(3000);
+    n = recv(fd, commandCNN, 256, 0);
+    n2 = recv(fd2, commandKinect, 256, 0);
 
-  n = recv(fd, buffer, 256, 0);
-  buffer[n] = '\0';
-  printf("Answer is: %s\n", buffer);
-  result = atoi(buffer);
-  printf("result is: %d\n", result);
 
-  return result;
+  
+  //n = recv(fd, buffer, 256, 0);
+  commandCNN[n] = '\0';
+  commandKinect[n] = '\0';
+
+  printf("Answer from CNN is: %s\n", commandCNN);
+  int resultFromCNN = atoi(commandCNN);
+  printf("Answer from Kinect is: %s\n", commandKinect);
+  int resultFromKinect = atoi(commandKinect);
+  printf("resultFromCNN is: %d\n", resultFromCNN);
+  printf("resultFromKinect is: %d\n", resultFromKinect);
+  return resultFromCNN;
 }
 
 int initClient(int &fd, int SOCKET_PORT, bool isSocket1){
@@ -197,7 +237,7 @@ void Walk::run(int &fd, int &fd2,int &n) {
   }
 
 
-int Walk::runExerciseOne(int n, char buffer[5], int fd) {
+void Walk::runExerciseOne(int n, char buffer[5], int fd) {
   printf("in runExerciseOne, n=%d, fd=%d",n,fd);
   cout << "-------MotionPlayer first exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_extend.motion file" << endl;
@@ -215,11 +255,11 @@ int Walk::runExerciseOne(int n, char buffer[5], int fd) {
     mSpeaker->speak("Please start now.",1.0);
     wait(2000);
     char command[] = "10";
-    return communicateWithServer(n,command,fd);
+    //return communicateWithServer(n,command,fd);
    
 }
 
-int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
+void Walk::runExerciseTwo(int n, int currentLevel, int fd) {
   printf("in runExerciseTwo, currentLevel=%d",currentLevel);
   cout << "-------MotionPlayer second exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_high.motion file" << endl;
@@ -255,11 +295,11 @@ int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
     
-    return communicateWithServer(n,command,fd);
+    //return communicateWithServer(n,command,fd);
 }
 
 
-int Walk::runExerciseThree(int n, int currentLevel, int fd) {
+void Walk::runExerciseThree(int n, int currentLevel, int fd) {
   printf("in runExerciseThree, currentLevel=%d",currentLevel);
   cout << "-------MotionPlayer last exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays blend knee motion" << endl;
@@ -300,7 +340,7 @@ int Walk::runExerciseThree(int n, int currentLevel, int fd) {
     mSpeaker->speak("Please start now.",1.0);
     wait(2000); 
     
-    return communicateWithServer(n,command,fd);
+    //return communicateWithServer(n,command,fd);
 
 }
    
@@ -358,10 +398,9 @@ void Walk::textToSpeechHappy() {
 
 void Walk::textToSpeechSadEncouragement() {
 
-  myStep();
-    
-    mSpeaker->speak("You can do it!",1.0);
+    myStep();
     wait(5000);
+    mSpeaker->speak("You can do it!",1.0);
     mSpeaker->speak("Push through.",1.0);
     wait(5000);
     mSpeaker->speak("This will soon be over.",1.0);

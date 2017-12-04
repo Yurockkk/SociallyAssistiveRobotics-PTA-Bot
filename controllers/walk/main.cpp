@@ -11,21 +11,24 @@ int main()
   int fd2 = -1;
   int n = -1;
   int resultFromCNN = -1;
-  char command[] = "CNN";
+  char command[] = "10";
   int currentLevel = 1;   //0: easy, 1: medium 2: hard
   
   Walk *controller = new Walk();
   controller->run(fd,fd2,n);
   controller->textToSpeechGreeting();
-  resultFromCNN = controller->runExerciseOne(n,command,fd);
+  controller->runExerciseOne(n,command,fd);
+  resultFromCNN = controller->communicateWithServer(n,currentLevel,fd,fd2);
   std::cout << "after movement1, Result from CNN " << resultFromCNN << std::endl;
   controller->textToSpeechEncourage();
   controller->getUpdatedLevel(currentLevel,resultFromCNN);
-  resultFromCNN = controller->runExerciseTwo(n,currentLevel,fd);
+  controller->runExerciseTwo(n,currentLevel,fd);
+  resultFromCNN = controller->communicateWithServer(n,currentLevel,fd,fd2);
   std::cout << "after movement2, Result from CNN " << resultFromCNN << std::endl;
   controller->textToSpeechEncourage();
   controller->getUpdatedLevel(currentLevel,resultFromCNN);
-  resultFromCNN = controller->runExerciseThree(n,currentLevel,fd);
+  controller->runExerciseThree(n,currentLevel,fd);
+  resultFromCNN = controller->communicateWithServer(n,currentLevel,fd,fd2);
   std::cout << "after movement3, Result from CNN " << resultFromCNN << std::endl;
   controller->textToSpeechEnding();
   delete controller;
