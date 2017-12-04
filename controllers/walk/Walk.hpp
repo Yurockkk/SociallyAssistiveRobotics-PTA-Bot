@@ -28,9 +28,8 @@ class Walk : public webots::Robot {
     int      runExerciseTwo(int n, int currentLevel, int fd);
     int      runExerciseThree(int n, int currentLevel, int fd);
     void     textToSpeechGreeting();
-    void     textToSpeechSecondExercise();
-    void     textToSpeechThirdExercise();
     void     textToSpeechSad();
+    void     textToSpeechSoso();
     void     textToSpeechHappy();
     void     textToSpeechSadEncouragement();
     void     textToSpeechHappyEncouragement();

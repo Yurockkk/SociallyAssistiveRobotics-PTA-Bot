@@ -231,18 +231,20 @@ int Walk::runExerciseTwo(int n, int currentLevel, int fd) {
     switch(currentLevel){
       case 0:  strncpy(command, "5", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat three times.",1.0);
+               wait(6000); 
                break;
       case 1:  strncpy(command, "10", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat five times.",1.0);
-
+               wait(6000); 
                break;
       case 2:  strncpy(command, "15", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat eight times.",1.0);
+               wait(6000); 
                break;
     }
     command[sizeof(command) - 1] = 0;
   
-
+    
     Motion motion_2("hand_high.motion");
     int time2 = motion_2.getDuration();
     for (int i=0; i<2; i++){
@@ -269,13 +271,15 @@ int Walk::runExerciseThree(int n, int currentLevel, int fd) {
     switch(currentLevel){
       case 0:  strncpy(command, "5", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat three times.",1.0);
+               wait(6000); 
                break;
       case 1:  strncpy(command, "10", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat five times.",1.0);
-
+               wait(6000); 
                break;
       case 2:  strncpy(command, "15", sizeof(command) - 1);
                mSpeaker->speak("Let’s start with our third exercise. Please follow the demonstration and repeat eight times.",1.0);
+               wait(6000); 
                break;
     }
     command[sizeof(command) - 1] = 0;
@@ -285,6 +289,8 @@ int Walk::runExerciseThree(int n, int currentLevel, int fd) {
     bool motionTwoFlag = false;
     bool motionThreeFlag = false;
     */
+    
+    
     for (int i=0; i<2; i++){
     mMotionManager->playPage(15);
     wait(500);
@@ -325,29 +331,20 @@ void Walk::textToSpeechGreeting() {
 
 }
 
-void Walk::textToSpeechSecondExercise() {
-
-  myStep();
-  
-    cout<<mSpeaker->getLanguage()<<endl;
-
-    mSpeaker->speak("Now let’s move on to do the next exercise. Please follow the demonstration",1.0);
-
-}
-
-void Walk::textToSpeechThirdExercise() {
-
-  myStep();
-       
-    mSpeaker->speak("This is your last exercise. Please follow the demonstration",1.0);
-
-}
 
 void Walk::textToSpeechSad() {
 
   myStep();
   
     mSpeaker->speak("And repeat three times",1.0);
+
+}
+
+void Walk::textToSpeechSoso() {
+
+  myStep();
+    
+    mSpeaker->speak("And repeat five times",1.0);
 
 }
 
