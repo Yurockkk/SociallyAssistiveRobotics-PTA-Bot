@@ -34,10 +34,10 @@ and run.
 #include <unistd.h>
 #include <netinet/in.h>
 
-#define SOCKET_PORT1 10024
+#define SOCKET_PORT1 10025
 #define SOCKET_PORT2 10020
 
-#define SOCKET_SERVER1 "10.199.23.140"   /*  */
+#define SOCKET_SERVER1 "192.168.1.4"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
 
 
@@ -99,40 +99,34 @@ void Walk::wait(int ms) {
 }
 
 int Walk::communicateWithServer(int n, int currentLevel, int fd, int fd2) {
-  printf("in communicateWithServer, n=%d, fd=%d",n,fd);
+  printf("in communicateWithServer, n=%d, fd=%d\n",n,fd);
   char commandCNN[10];
   char commandKinect[10];
     switch(currentLevel){
       case 0:  strncpy(commandCNN, "8", sizeof(commandCNN) - 1);
                strncpy(commandKinect, "9", sizeof(commandKinect) - 1);
-               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat three times.",1.0);
-               wait(6000); 
                break;
       case 1:  strncpy(commandCNN, "14", sizeof(commandCNN) - 1);
                strncpy(commandKinect, "15", sizeof(commandKinect) - 1);
-               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat five times.",1.0);
-               wait(6000); 
                break;
       case 2:  strncpy(commandCNN, "23", sizeof(commandCNN) - 1);
                strncpy(commandKinect, "24", sizeof(commandKinect) - 1);
-               mSpeaker->speak("Let’s start with our second exercise. Please follow the demonstration and repeat eight times.",1.0);
-               wait(6000); 
                break;
     }
     commandCNN[sizeof(commandCNN) - 1] = 0;
     commandKinect[sizeof(commandKinect) - 1] = 0;
     
-  int result = -1; 
+  //int result = -1; 
   int n2 = -1;      
   n = strlen(commandCNN);
-  n2 = strlen(commandKinect);;
+  n2 = strlen(commandKinect);
   printf("commandCNN:%s\n",commandCNN);
    printf("commandKinect:%s\n",commandKinect);
 
   //buffer[n++] = '\n';     /* append carriage return */
   //buffer[n] = '\0';
   n = send(fd, commandCNN, n, 0);
-  n2 = send(fd2,commandKinect,n,0);
+  n2 = send(fd2,commandKinect,n2,0);
   //if (strncmp(commandCNN, "exit", 4) == 0) {
     //break;
   //}
@@ -142,8 +136,10 @@ int Walk::communicateWithServer(int n, int currentLevel, int fd, int fd2) {
     printf("in communicateWithServer while loop\n");
     mSpeaker->speak("Keep Going!",1.0);
     wait(3000);
-    n = recv(fd, commandCNN, 256, 0);
-    n2 = recv(fd2, commandKinect, 256, 0);
+    mSpeaker->speak("Keep Going!",1.0);
+    
+    n = recv(fd, commandCNN, 10, 0);
+    n2 = recv(fd2, commandKinect, 10, 0);
 
 
   
@@ -253,7 +249,7 @@ void Walk::runExerciseOne(int n, char buffer[5], int fd) {
     }
     
     mSpeaker->speak("Please start now.",1.0);
-    wait(2000);
+    wait(1000);
     char command[] = "10";
     //return communicateWithServer(n,command,fd);
    

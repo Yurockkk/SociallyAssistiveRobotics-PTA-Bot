@@ -32,7 +32,7 @@ while True:
                     print 'loop'
 
                 print 'loop finish'
-                result = 'result from server!'
+                result = '7'
                 connection.sendall(result)
             else:
                 print >>sys.stderr, 'no more data from', client_address
