@@ -147,13 +147,12 @@ int Walk::communicateWithServer(int g, int currentLevel, int fd, int fd2) {
   n = send(fd, commandCNN, n, 0);
   n2 = send(fd2,commandKinect,n2,0);
 
-    wait(3000);
+    wait(4000);
     mSpeaker->speak("You can do it!",1.0);
-    printf("in communicateWithServer while loop\n");
-    mSpeaker->speak("Keep Going!",1.0);
     wait(3000);
     mSpeaker->speak("Keep Going!",1.0);
-    
+    wait(1000);
+
     n = recv(fd, commandCNN, 10, 0);
     n2 = recv(fd2, commandKinect, 10, 0);
 
@@ -267,8 +266,7 @@ void Walk::runExerciseOne(int &g, char buffer[5], int fd) {
     
     mSpeaker->speak("Please start now.",1.0);
     wait(1000);
-    char command[] = "10";
-    //return communicateWithServer(n,command,fd);
+    
    
 }
 
