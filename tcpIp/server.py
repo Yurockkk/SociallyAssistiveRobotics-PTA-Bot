@@ -27,9 +27,7 @@ while True:
             print >>sys.stderr, 'received "%s"' % data
             if data:
                 print >>sys.stderr, 'sending data back to the client'
-                for x in range(0, 150000):
-                    #donothing
-                    print 'loop'
+                print data
 
                 print 'loop finish'
                 result = '7'
