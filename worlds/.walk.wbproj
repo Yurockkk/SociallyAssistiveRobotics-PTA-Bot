@@ -6,7 +6,7 @@ minimizedPerspectives:
 maximizedDockId: -1
 centralWidgetVisible: 1
 orthographicViewHeight: 1
-textFiles: 2 "controllers/walk/main.cpp" "controllers/walk/Walk.hpp" "controllers/walk/Walk.cpp"
+textFiles: 0 "controllers/walk/main.cpp" "controllers/walk/Walk.cpp" "controllers/walk/Walk.hpp"
 documentationBook: 
 documentationPage: 
 renderingDevicePerspectives: 61;1;0.30625;0.0221811;0.0194805

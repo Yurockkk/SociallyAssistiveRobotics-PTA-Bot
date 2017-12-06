@@ -23,19 +23,14 @@ class Walk : public webots::Robot {
   public:
              Walk();
     virtual  ~Walk();
-    void     run(int &fd, int &fd2,int &n);
+    void     createSocketWithServers(int &fd, int &fd2,int &n);
     void     runExerciseOne(int &g, char buffer[5], int fd);
     void     runExerciseTwo(int &g, int currentLevel, int fd);
     void     runExerciseThree(int &g, int currentLevel, int fd);
     void     textToSpeechGreeting();
-    void     textToSpeechSad();
-    void     textToSpeechSoso();
-    void     textToSpeechHappy();
-    void     textToSpeechSadEncouragement();
-    void     textToSpeechHappyEncouragement();
     void     textToSpeechEnding();
-    void     getUpdatedLevel(int &currentLevel,int &resultFromCNN);
     void     textToSpeechEncourage();
+    void     getUpdatedLevel(int &currentLevel,int &resultFromCNN);
     int      communicateWithServer(int g, int currentLevel, int fd, int fd2);
 
   private:

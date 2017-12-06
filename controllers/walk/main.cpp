@@ -9,13 +9,14 @@ int main()
 { 
   int fd = -1;
   int fd2 = -1;
-  int g = -1;
-  int resultFromCNN = -1;
+  int g = -1;              // 1: gesture1 , 2: gesture2, 3: gesture3 
+  int resultFromCNN = -1;  // resultFromCNN = 0 -> negative
+                           // resultFromCNN = 1 -> positive
   char command[] = "10";
   int currentLevel = 1;   //0: easy, 1: medium 2: hard
   
   Walk *controller = new Walk();
-  controller->run(fd,fd2,g);
+  controller->createSocketWithServers(fd,fd2,g);
   controller->textToSpeechGreeting();
   controller->runExerciseOne(g,command,fd);
   resultFromCNN = controller->communicateWithServer(g,currentLevel,fd,fd2);
