@@ -30,19 +30,12 @@ and run.
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-<<<<<<< HEAD
-#define SOCKET_PORT1 10020
-#define SOCKET_PORT2 10023
 
-#define SOCKET_SERVER1 "127.0.0.1"   /*  */
-#define SOCKET_SERVER2 "192.168.1.4"   /* local host */
-=======
 #define SOCKET_PORT1 10026
 #define SOCKET_PORT2 10020
 
 #define SOCKET_SERVER1 "192.168.1.4"   /*  */
 #define SOCKET_SERVER2 "127.0.0.1"   /* local host */
->>>>>>> refactoringCode
 
 using namespace webots;
 using namespace managers;
@@ -100,17 +93,6 @@ void Walk::wait(int ms) {
   myStep();
 }
 
-<<<<<<< HEAD
-void communicateWithServer(int n, char buffer[5], int fd) {
-  printf("in communicateWithServer, n=%d, fd=%d",n,fd);       
-  n = strlen(buffer);
-  //buffer[n++] = '\n';     /* append carriage return */
-  //buffer[n] = '\0';
-  n = send(fd, buffer, n, 0);
-
-  if (strncmp(buffer, "exit", 4) == 0) {
-    //break;
-=======
 int Walk::communicateWithServer(int g, int currentLevel, int fd, int fd2) {
   printf("in communicateWithServer, g=%d, fd=%d\n",g,fd);
   char commandCNN[10];
@@ -131,7 +113,6 @@ int Walk::communicateWithServer(int g, int currentLevel, int fd, int fd2) {
       commandKinect[0] = '3';
       commandKinect[1] = ',';
       break;
->>>>>>> refactoringCode
   }
   
   switch(currentLevel){
@@ -250,147 +231,12 @@ void Walk::createSocketWithServers(int &fd, int &fd2,int &n) {
   }
 
 
-<<<<<<< HEAD
-  while (true) {
-    checkIfFallen();
 
-    mGaitManager->setXAmplitude(0.0);
-    mGaitManager->setAAmplitude(0.0);
-
-    // get keyboard key
-    while((key = mKeyboard->getKey()) >= 0) {
-      switch(key) {
-        case ' ' : // Space bar
-          if(isWalking) {
-            mGaitManager->stop();
-            isWalking = false;
-            wait(200);
-          }
-          else {
-            mGaitManager->start();
-            isWalking = true;
-            wait(200);
-          }
-          break;
-        case Keyboard::UP :
-          mGaitManager->setXAmplitude(1.0);
-          cout << "User clicked up" << endl;
-
-          break;
-        case Keyboard::DOWN :
-          mGaitManager->setXAmplitude(-1.0);
-          cout << "User clicked down" << endl;
-
-          break;
-        case Keyboard::RIGHT :
-          mGaitManager->setAAmplitude(-0.5);
-          cout << "User clicked right" << endl;
-
-          break;
-        case Keyboard::LEFT :
-          mGaitManager->setAAmplitude(0.5);
-          cout << "User clicked left" << endl;
-
-          break;
-        case Keyboard::KEY :
-          cout << "User clicked KEY" << endl;
-          break;
-          
-        case 49 ://1 key
-          cout<<"1 key press"<<endl;
-          mSpeaker->speak("Let’s start with our first exercise",1.0);
-
-          for(int i = 0 ; i < 3; i++){
-            motion_1.play();
-            wait(motion_1.getDuration());
-          }
-          
-          break; 
-          
-        case 50 ://2 key
-          cout<<"2 key press"<<endl;
-          for(int i = 0 ; i < 3; i++){
-            motion_2.play();
-            wait(motion_2.getDuration());
-          }
-          
-          break; 
-          
-        case 51 ://3 key
-          cout<<"3 key press"<<endl;
-          count = 0;
-          while(count < 3){
-            mMotionManager->playPage(15);
-            wait(1000);
-            mMotionManager->playPage(1);
-            count++;
-          }
-          
-          
-          break; 
-          
-        case 81 ://Q key
-          cout<<"q key press"<<endl;
-          
-          motion_1.play();
-          motionThreeFlag = true;
-          break;
-          
-        case 87 :
-            cout << "User clicked W" << endl;
-            mMotionManager->playPage(6, false);
-            
-            if(isSocket2Established){
-              for(int i = 0 ; i < 256; i++){
-                buffer[i] = command[i];
-              }
-              char command[] = "5";
-              communicateWithServer(n, command, fd2);
-            }
-            
-            while (mMotionManager->isMotionPlaying()) {
-              mMotionManager->step(mTimeStep);
-              /*
-                * Do something,
-                * like image processing for example
-              */
-              myStep();
-            }
-            break;
-            
-        case 69 :
-            cout << "User clicked E" << endl;
-            mMotionManager->playPage(10, false);
-            
-            if(isSocket1Established){
-            //get the command
-              for(int i = 0 ; i < 256; i++){
-                buffer[i] = command[i];
-              }
-              char command[] = "BBC";
-              communicateWithServer(n, command, fd);
-            }
-            while (mMotionManager->isMotionPlaying()) {
-              mMotionManager->step(mTimeStep);
-              /*
-                * Do something,
-                * like image processing for example
-              */
-              myStep();
-            }
-            break;
-        default:
-        cout << "default: User clicked " << key << endl;
-          break;
-      }
-    }
-=======
 void Walk::runExerciseOne(int &g, char buffer[5], int fd) {
   g = 1;
   printf("in runExerciseOne, g=%d, fd=%d",g,fd);
   cout << "-------MotionPlayer first exercise of ROBOTIS OP2-------" << endl;
   cout << "This exercise plays a Webots hand_extend.motion file" << endl;
->>>>>>> refactoringCode
 
   // step
   myStep();
